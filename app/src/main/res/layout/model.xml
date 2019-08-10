@@ -36,6 +36,7 @@
             android:padding="5dp"
             android:layout_below="@+id/cityTextView"/>
 
+
     </RelativeLayout>
 
 

@@ -3,6 +3,7 @@ package com.progy.elan.companq;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -39,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
         private String name;
         private String city;
         private String country;
+        private Double latitude;
+        private Double longitude;
         /*
         GETTERS AND SETTERS
         */
-        public String getName() {
-            return name;
-        }
+        public String getName() { return name; }
         public void setName(String name) {
             this.name = name;
         }
@@ -60,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
         public void setCountry(String country) {
             this.country = country;
         }
+        public Double getLat(){ return latitude;}
+        public void setLat(Double latitude){ this.latitude = latitude;}
+        public Double getLon(){ return longitude;}
+        public void setLon(Double longitude){ this.longitude = longitude;}
+
         /*
         TOSTRING
         */
@@ -161,7 +168,20 @@ public class MainActivity extends AppCompatActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(c, s.getName(), Toast.LENGTH_SHORT).show();
+                    Double dLat = (s.getLat());
+                    Double dLon = (s.getLon());
+                    String sName = (s.getName());
+                    String sCity = (s.getCity());
+                    String sCountry = (s.getCountry());
+
+                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                    intent.putExtra("LAT", dLat);
+                    intent.putExtra("LON", dLon);
+                    intent.putExtra("NAME", sName);
+                    intent.putExtra("CITY", sCity);
+                    intent.putExtra("COUNTRY", sCountry);
+                    startActivity(intent);
+//
                 }
             });
             return view;
@@ -229,10 +249,14 @@ public class MainActivity extends AppCompatActivity {
                                     JSONObject location = c.getJSONObject("location");
                                     String city=location.getString("city");
                                     String country=location.getString("country");
+                                    Double latitude = location.getDouble("latitude");
+                                    Double longitude = location.getDouble("longitude");
                                     s=new Spacecraft();
                                     s.setName(name);
                                     s.setCity(city);
                                     s.setCountry(country);
+                                    s.setLat(latitude);
+                                    s.setLon(longitude);
                                     downloadedData.add(s);
                                 }
                                 myProgressBar.setVisibility(View.GONE);
